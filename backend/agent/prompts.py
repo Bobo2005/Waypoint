@@ -48,3 +48,27 @@ def build_user_prompt(path: str) -> str:
         f"the repo's tests/ directory -- find and run the ones for this "
         f"file with `run_bash` before you consider the migration done."
     )
+
+# Appended to SYSTEM_PROMPT only when the orchestrator's run_loop() is
+# driving the migration across many files. In that mode the orchestrator
+# -- not the model -- independently re-runs tests and does the commit
+# with its own fixed message, so the model shouldn't also try to commit.
+RUN_LOOP_ADDENDUM = """\
+You're being run as one step in a larger, multi-file migration loop. \
+The orchestrator around you -- not you -- will independently re-run \
+tests and commit your change once it verifies they pass. Do NOT call \
+git_commit yourself in this mode. Just migrate the file, write it, run \
+its tests to check your own work, and stop once they pass (or once \
+you've made your best attempt and are out of ideas)."""
+
+
+def build_retry_prompt(path: str, failure_output: str) -> str:
+    """User message for the one allowed retry after a failed attempt,
+    with the actual pytest failure output as extra context."""
+    trimmed = failure_output[-4000:]  # keep the prompt bounded
+    return (
+        f"Your previous migration of {path} still fails its tests. Here is "
+        f"the pytest output from that failure:\n\n{trimmed}\n\n"
+        f"Read the file again, find and fix the issue, write the corrected "
+        f"file, and re-run its tests before stopping."
+    )

@@ -16,6 +16,9 @@ from __future__ import annotations
 import os
 from typing import Any, Dict, List, Optional
 
+from dotenv import load_dotenv
+load_dotenv()  # reads .env in the current working directory (or a parent) into os.environ
+
 import anthropic
 
 DEFAULT_MODEL = os.environ.get("WAYPOINT_MODEL", "claude-sonnet-4-6")
