@@ -1,0 +1,34 @@
+# Paritok config for Waypoint -- self-host mode.
+# Quick-start reference: https://pypi.org/project/paritok/ (Option A: self-host)
+#
+#   pip install "paritok[proxy]"
+#   ollama pull paritok/paritok-4b-v1        # one-time, ~2.5GB (q4)
+#   ollama cp paritok/paritok-4b-v1 paritok-4b-v1
+#   paritok up
+#
+# `use_gpu_server` is the one switch Paritok's docs call out as deciding
+# everything: false runs the open 4B compression model on this machine via
+# Ollama and nothing leaves the box; true would send compression to
+# Paritok's hosted GPU server instead (not used here).
+use_gpu_server: false
+
+# Local model runtime that `paritok up` talks to for compression itself.
+# The model name matches the `ollama cp` target above -- if you pull the
+# full-precision variant instead (paritok/paritok-4b-v1:f16, ~8GB), tag it
+# the same way and update `model` to match.
+ollama:
+  host: http://127.0.0.1:11434
+  model: paritok-4b-v1
+
+# Where Paritok's proxy itself listens. Waypoint's ANTHROPIC_BASE_URL
+# should point here.
+proxy:
+  host: 127.0.0.1
+  port: 8080
+
+# The real Anthropic API that compressed requests get forwarded to after
+# Paritok has done its work. ANTHROPIC_API_KEY must still be set in the
+# environment Waypoint runs in -- Paritok compresses and forwards the
+# request, it doesn't supply your API key.
+upstream:
+  base_url: https://api.anthropic.com

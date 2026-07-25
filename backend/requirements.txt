@@ -1,0 +1,8 @@
+# Waypoint agent core
+anthropic>=0.40.0        # Claude client, routed through Paritok via ANTHROPIC_BASE_URL
+python-dotenv>=1.0.0     # optional convenience for loading .env locally
+
+# Needed to run demo-repo's own tests via the run_bash tool
+pytest>=7.4.0
+httpx>=0.27.0            # what demo-repo files get migrated TO
+requests>=2.31.0,<3      # what demo-repo files start out using (pre-migration)
