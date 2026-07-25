@@ -1,5 +1,5 @@
 """Send event payloads to a webhook endpoint."""
-import requests
+import httpx
 
 DEFAULT_TIMEOUT = 5
 
@@ -7,10 +7,10 @@ DEFAULT_TIMEOUT = 5
 def send_webhook(base_url: str, event: str, payload: dict) -> dict:
     """POST an event to the webhook endpoint and return the decoded response.
 
-    Raises requests.HTTPError if the server responds with a non-2xx status.
+    Raises httpx.HTTPStatusError if the server responds with a non-2xx status.
     """
     body = {"event": event, "data": payload}
-    response = requests.post(
+    response = httpx.post(
         f"{base_url}/webhooks/incoming",
         json=body,
         timeout=DEFAULT_TIMEOUT,
