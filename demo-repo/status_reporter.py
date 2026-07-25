@@ -1,5 +1,5 @@
 """Check the health of a remote service and report a simple status string."""
-import requests
+import httpx
 
 DEFAULT_TIMEOUT = 5
 
@@ -7,12 +7,12 @@ DEFAULT_TIMEOUT = 5
 def check_health(base_url: str) -> str:
     """Return 'healthy', 'unhealthy (<code>)', 'timeout', or 'unreachable'."""
     try:
-        response = requests.get(f"{base_url}/health", timeout=DEFAULT_TIMEOUT)
+        response = httpx.get(f"{base_url}/health", timeout=DEFAULT_TIMEOUT)
         response.raise_for_status()
-    except requests.exceptions.ConnectionError:
+    except httpx.ConnectError:
         return "unreachable"
-    except requests.exceptions.Timeout:
+    except httpx.TimeoutException:
         return "timeout"
-    except requests.exceptions.HTTPError:
+    except httpx.HTTPStatusError:
         return f"unhealthy ({response.status_code})"
     return "healthy"
