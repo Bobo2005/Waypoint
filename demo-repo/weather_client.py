@@ -1,5 +1,5 @@
 """Fetch current weather for a city from a small JSON weather API."""
-import requests
+import httpx
 
 DEFAULT_TIMEOUT = 5
 
@@ -7,9 +7,9 @@ DEFAULT_TIMEOUT = 5
 def get_weather(city: str, base_url: str) -> dict:
     """Return the current weather payload for `city`.
 
-    Raises requests.HTTPError if the server responds with a non-2xx status.
+    Raises httpx.HTTPStatusError if the server responds with a non-2xx status.
     """
-    response = requests.get(
+    response = httpx.get(
         f"{base_url}/weather",
         params={"city": city},
         timeout=DEFAULT_TIMEOUT,
