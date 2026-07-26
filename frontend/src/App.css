@@ -1,0 +1,138 @@
+.app-shell {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- Mission bar ---------------------------------------------------- */
+
+.mission-bar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.mission-bar__brand {
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+}
+
+.mission-bar__task {
+  color: var(--text-muted);
+  font-size: 13px;
+  flex: 1;
+}
+
+.mission-bar__status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.mission-bar__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.mission-bar__status.is-live {
+  color: var(--beacon);
+}
+
+.mission-bar__status.is-live .mission-bar__dot {
+  background: var(--beacon);
+  animation: dot-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes dot-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.75);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mission-bar__status.is-live .mission-bar__dot {
+    animation: none;
+  }
+}
+
+/* ---- Stat strip ------------------------------------------------------ */
+
+.stat-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.stat-tile {
+  padding: 20px 24px;
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.stat-tile:last-child {
+  border-right: none;
+}
+
+/* ---- Two-column layout ------------------------------------------------ */
+
+.main-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 20px;
+  padding: 20px;
+  background: var(--ink);
+  align-items: start;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 0;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.route-panel {
+  align-items: flex-start;
+}
+
+.side-column {
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+  .stat-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .stat-tile:nth-child(2) {
+    border-right: none;
+  }
+}

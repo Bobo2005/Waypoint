@@ -1,0 +1,70 @@
+:root {
+  /* Flight Log color tokens -- exact values from the design system, not substituted */
+  --ink: #0b0f14; /* page background */
+  --panel: #131c24; /* card/panel surfaces */
+  --line: #223140; /* hairline borders, dividers, grid lines */
+  --text-primary: #e7edf2;
+  --text-muted: #7e8fa0;
+  --beacon: #f2a93b; /* active/in-progress, primary actions */
+  --checkpoint: #45d6a4; /* passed tests, committed, done */
+  --alert: #e8604c; /* failed test, error */
+
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* Section labels: 11px mono uppercase, +0.08em tracking -- used for every
+   stat/panel heading so the "console" rhythm stays consistent everywhere. */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+/* Stat numbers: 32-48px mono bold, used identically by every stat tile
+   (tokens/cost/compression/recalls) so the strip reads as one family. */
+.stat-number {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 36px;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.stat-number__sub {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--beacon);
+  outline-offset: 2px;
+}

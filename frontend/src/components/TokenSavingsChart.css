@@ -1,0 +1,20 @@
+.token-chart {
+  width: 100%;
+}
+
+.token-chart__tooltip {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 8px 10px;
+  font-size: 12px;
+}
+
+.token-chart__tooltip-time {
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.token-chart__tooltip-value {
+  color: var(--beacon);
+  font-weight: 600;
+}

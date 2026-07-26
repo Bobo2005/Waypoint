@@ -1,0 +1,134 @@
+.waypoint-trail {
+  list-style: none;
+  margin: 0;
+  padding: 12px 4px 4px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.waypoint-node {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Connector line: a hairline between each node and the previous one.
+   Deliberately always `line`-colored, never beacon/checkpoint/alert --
+   the design system reserves those for actionable/pass/fail states, and
+   a connector is neither, so it stays neutral. */
+.waypoint-node:not(:first-child)::before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  right: 50%;
+  width: 100%;
+  height: 1px;
+  background: var(--line);
+  z-index: 0;
+}
+
+.waypoint-node__dot {
+  position: relative;
+  z-index: 1;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  background: var(--panel);
+  border: 2px solid var(--line);
+  color: var(--text-primary);
+  flex-shrink: 0;
+}
+
+/* pending: hollow ring */
+.waypoint-node--pending .waypoint-node__dot {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--text-muted);
+}
+
+/* in_progress: filled amber, pulsing */
+.waypoint-node--in_progress .waypoint-node__dot {
+  background: var(--beacon);
+  border-color: var(--beacon);
+  color: var(--ink);
+  animation: waypoint-pulse 1.5s ease-in-out infinite;
+}
+
+/* done: filled green with a check */
+.waypoint-node--done .waypoint-node__dot {
+  background: var(--checkpoint);
+  border-color: var(--checkpoint);
+  color: var(--ink);
+}
+
+/* failed: filled red with an X */
+.waypoint-node--failed .waypoint-node__dot {
+  background: var(--alert);
+  border-color: var(--alert);
+  color: var(--ink);
+}
+
+@keyframes waypoint-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.65;
+  }
+}
+
+.waypoint-node__status-text {
+  display: none;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--beacon);
+}
+
+/* prefers-reduced-motion: no pulse. The active node instead gets a
+   static amber ring (same visual language as the hollow pending ring,
+   just amber) plus a text label, exactly per the design system's
+   "static ring with a text label" fallback. */
+@media (prefers-reduced-motion: reduce) {
+  .waypoint-node--in_progress .waypoint-node__dot {
+    animation: none;
+    background: transparent;
+    color: var(--beacon);
+    border-color: var(--beacon);
+  }
+
+  .waypoint-node--in_progress .waypoint-node__status-text {
+    display: inline-block;
+  }
+}
+
+.waypoint-node__file {
+  font-size: 11px;
+  color: var(--text-muted);
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.waypoint-node--in_progress .waypoint-node__file,
+.waypoint-node--done .waypoint-node__file {
+  color: var(--text-primary);
+}
+
+.waypoint-node--failed .waypoint-node__file {
+  color: var(--alert);
+}

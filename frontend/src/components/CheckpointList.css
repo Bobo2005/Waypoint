@@ -1,0 +1,79 @@
+.checkpoint-log {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 2px;
+  font-size: 13px;
+  overflow-y: auto;
+  max-height: 260px;
+  padding-right: 4px;
+}
+
+.checkpoint-line {
+  display: grid;
+  grid-template-columns: 14px 78px 1fr 20px 64px;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 4px;
+  border-bottom: 1px solid var(--line);
+  animation: slide-in-from-bottom 220ms ease-out both;
+}
+
+.checkpoint-line:last-child {
+  border-bottom: none;
+}
+
+.checkpoint-line__prompt {
+  color: var(--text-muted);
+}
+
+.checkpoint-line__time {
+  color: var(--text-muted);
+}
+
+.checkpoint-line__action {
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.checkpoint-line__result {
+  text-align: center;
+  font-weight: 700;
+}
+
+.checkpoint-line.is-pass .checkpoint-line__result {
+  color: var(--checkpoint);
+}
+
+.checkpoint-line.is-fail .checkpoint-line__result {
+  color: var(--alert);
+}
+
+.checkpoint-line__sha {
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.checkpoint-line--empty {
+  color: var(--text-muted);
+  padding: 6px 4px;
+}
+
+@keyframes slide-in-from-bottom {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .checkpoint-line {
+    animation: none;
+  }
+}

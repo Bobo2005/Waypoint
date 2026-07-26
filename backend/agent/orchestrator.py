@@ -16,6 +16,7 @@ from __future__ import annotations
 import json
 import re
 import subprocess
+import threading
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -36,6 +37,23 @@ DEMO_REPO = REPO_ROOT / "demo-repo"
 MAX_TURNS = 12
 
 REQUESTS_IMPORT_RE = re.compile(r"^\s*(import requests\b|from requests\b)", re.MULTILINE)
+
+# --- Pause hook for backend/main.py's POST /run/pause ---------------------
+# A single process-wide flag, checked only between tasks in run_loop() (see
+# the check right after each task's checkpoint is persisted, below). This
+# does NOT touch how a file gets migrated, tested, or committed -- it only
+# decides whether the loop starts the *next* task.
+_pause_event = threading.Event()
+
+
+def request_pause() -> None:
+    """Ask the currently running run_loop() to stop after its current
+    file finishes. Takes effect at the next task boundary, not instantly."""
+    _pause_event.set()
+
+
+def pause_requested() -> bool:
+    return _pause_event.is_set()
 
 
 def _now() -> datetime:
@@ -135,6 +153,8 @@ def migrate_one_file(path: str, repo_root: Optional[Path] = None) -> bool:
     verification itself."""
     repo_root = repo_root or REPO_ROOT
     client = get_client()
+    _pause_event.clear()  # a fresh call to run_loop() always starts unpaused
+    state.overall_status = RunStatus.IN_PROGRESS
     passed, _ = _run_agent_loop(client, repo_root, SYSTEM_PROMPT, build_user_prompt(path))
     return passed
 
@@ -300,6 +320,11 @@ def run_loop(
         state.current_index = i + 1
         state.updated_at = _now()
         store.save(state, path=state_path)  # persist after EVERY task, pass or fail
+        if _pause_event.is_set():
+            state.overall_status = RunStatus.PAUSED
+            state.updated_at = _now()
+            store.save(state, path=state_path)
+            return state
 
     state.overall_status = (
         RunStatus.COMPLETED_WITH_FAILURES

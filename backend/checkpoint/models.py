@@ -27,6 +27,7 @@ class TaskStatus(str, Enum):
 class RunStatus(str, Enum):
     NOT_STARTED = "not_started"
     IN_PROGRESS = "in_progress"
+    PAUSED = "paused"
     COMPLETED = "completed"
     COMPLETED_WITH_FAILURES = "completed_with_failures"
 
